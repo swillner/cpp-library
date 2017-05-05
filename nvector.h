@@ -1,5 +1,5 @@
-#ifndef NVECTOR_H
-#define NVECTOR_H
+#ifndef NVECTOR_H_
+#define NVECTOR_H_
 
 #include <vector>
 
@@ -62,7 +62,12 @@ class nvector {
         return at_<0>(0, args...);
     }
 
-    inline T* raw() { return &data[0]; }
+    void reset(T initial_value) { std::fill(std::begin(data), std::end(data), initial_value); }
+
+    inline typename Storage::iterator begin() { return std::begin(data); };
+    inline typename Storage::iterator end() { return std::end(data); };
+    inline const typename Storage::iterator begin() const { return std::begin(data); };
+    inline const typename Storage::iterator end() const { return std::end(data); };
 };
 
 #endif
