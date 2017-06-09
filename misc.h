@@ -1,12 +1,17 @@
+/*
+  Miscellaneous helpers from various sources
+*/
+
 #ifndef MISC_H
 #define MISC_H
 
-// ***************************************
+//
+// Scope exit helper
 // Call on scope exit (like finally)
 // Example:
 //   FILE * fp = fopen("test.out", "wb");
 //   SCOPE_EXIT(fclose(fp));
-
+//
 template<typename F>
 struct ScopeExit {
     ScopeExit(F f) : f(f) {}
@@ -21,8 +26,9 @@ ScopeExit<F> MakeScopeExit(F f) {
 
 #define SCOPE_EXIT(code) auto STRING_JOIN2(scope_exit_, __LINE__) = MakeScopeExit([=]() { code; })
 
-// ***************************************
-
+//
+// Some definitions of C++14+ constructs
+//
 template<class T>
 using remove_const_t = typename remove_const<T>::type;
 template<class T>
@@ -39,8 +45,9 @@ auto cend(const C& container) -> decltype(std::end(container)) {
     return std::end(container);
 }
 
-// ***************************************
+//
 // Debug output
+//
 template<typename... Types>
 void debug(Types... args);
 template<typename Type1, typename... Types>
@@ -50,25 +57,19 @@ void debug(Type1 arg1, Types... rest) {
 }
 template<>
 void debug() {}
-// ***************************************
 
+//
+// Convenient constructor for std::array
 // from https://a4z.bitbucket.io/blog/2017/01/19/A-convenient-constructor-for-std::array.html
+//
 template<typename... Args>
 std::array<typename std::common_type<Args...>::type, sizeof...(Args)> array(Args&&... args) {
     return std::array<typename std::common_type<Args...>::type, sizeof...(Args)>{std::forward<Args>(args)...};
 }
 
-template<typename T>
-void f_impl(T val, true_type);
-// for integer T
-template<typename T>
-void f_impl(T val, false_type);
-// for others
-template<typename T>
-void f(T val) {
-    f_impl(val, std::is_integral<T>());
-}
-
+//
+// iterator-zip
+//
 template<typename... Args>
 class ContainerBundle {
   public:
@@ -117,5 +118,39 @@ class IteratorBundle {
         return {args...};
     }
 };
+
+//
+// output stream << std::tuple
+//
+namespace details {
+template<std::size_t i>
+struct ostream_tuple_helper {
+    template<typename T>
+    static std::ostream& write(std::ostream& os, T&& t) {
+        return ostream_tuple_helper<i - 1>::write(os, t) << ", " << std::get<i - 1>(t);
+    }
+};
+
+template<>
+struct ostream_tuple_helper<1> {
+    template<typename T>
+    static std::ostream& write(std::ostream& os, T&& t) {
+        return os << std::get<0>(t);
+    }
+};
+
+template<>
+struct ostream_tuple_helper<0> {
+    template<typename T>
+    static std::ostream& write(std::ostream& os, T&& t) {
+        return os;
+    }
+};
+}
+
+template<typename... Args>
+std::ostream& operator<<(std::ostream& os, const std::tuple<Args...>& t) {
+    return details::ostream_tuple_helper<std::tuple_size<std::tuple<Args...>>::value>::write(os, t);
+}
 
 #endif
