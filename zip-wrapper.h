@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-namespace zip {
+namespace libzip {
 class exception : public std::runtime_error {
   public:
     exception(const std::string& msg) : std::runtime_error(msg){};
@@ -83,7 +83,7 @@ class Archive {
     zip* m;
 
   public:
-    archive(const std::string& filename) {
+    Archive(const std::string& filename) {
         int err;
         m = zip_open(filename.c_str(), 0, &err);
         if (!m) {
@@ -92,7 +92,7 @@ class Archive {
             throw exception(buf);
         }
     }
-    ~archive() { zip_close(m); }
+    ~Archive() { zip_close(m); }
     zip* get_handle() { return m; }
     ifstream open(const std::string& name, zip_flags_t flags = 0, const std::string& password = "") {
         zip_file* file;

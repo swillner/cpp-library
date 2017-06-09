@@ -21,7 +21,9 @@
 #include <exception>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <string>
+#include <typeinfo>
 
 namespace csv {
 
