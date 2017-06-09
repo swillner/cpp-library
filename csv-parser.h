@@ -18,6 +18,11 @@
 #ifndef CSV_PARSER_H
 #define CSV_PARSER_H
 
+#include <exception>
+#include <iostream>
+#include <iterator>
+#include <string>
+
 namespace csv {
 
 class parser_exception : public std::runtime_error {

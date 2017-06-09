@@ -15,8 +15,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ZIP_H
-#define ZIP_H
+#ifndef ZIP_WRAPPER_H
+#define ZIP_WRAPPER_H
+
+#include <zip.h>
+#include <exception>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace zip {
 class exception : public std::runtime_error {
