@@ -71,7 +71,6 @@ enum class ColumnType { EMPTY, STRING, INTEGER, FLOAT };
 class Parser {
   protected:
     std::istream& in;
-    bool row_has_been_read = false;
     char delimiter;
     unsigned long row_ = 0;
     bool col_has_been_read = false;
@@ -219,7 +218,7 @@ class Parser {
     bool next_row() {
         ++row_;
         char c;
-        if (!row_has_been_read && !col_has_been_read) {
+        if (!row_finished) {
             bool quoted = false;
             while (true) {
                 if (in.eof()) {
@@ -253,7 +252,6 @@ class Parser {
             return next_row();
         }
         col_has_been_read = false;
-        row_has_been_read = false;
         row_finished = false;
         col_ = 0;
         return true;
@@ -720,7 +718,6 @@ inline bool Parser::next_col() {
         read<void>();
     }
     col_has_been_read = false;
-    row_has_been_read = true;
     return true;
 }
 
