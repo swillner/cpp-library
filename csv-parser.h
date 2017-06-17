@@ -179,6 +179,9 @@ class Parser {
     inline long row() const { return row_; };
     inline long col() const { return col_; };
 
+    inline bool eof() const { return in.eof(); };
+    inline bool eol() const { return row_finished; };
+
     template<typename T>
     inline typename std::enable_if<std::is_same<T, void>::value, T>::type read();
 
@@ -245,6 +248,10 @@ class Parser {
         if (in.eof()) {
             return false;
         }
+        c = in.peek();
+        if (c == '#') {
+            return next_row();
+        }
         col_has_been_read = false;
         row_has_been_read = false;
         row_finished = false;
@@ -254,7 +261,7 @@ class Parser {
 };
 
 template<>
-void Parser::read<void>() {
+inline void Parser::read<void>() {
     begin_read();
     bool quoted = false;
     char c;
@@ -283,7 +290,7 @@ void Parser::read<void>() {
 }
 
 template<>
-std::string Parser::read<std::string>() {
+inline std::string Parser::read<std::string>() {
     begin_read();
     std::string res = "";
     bool quoted = false;
@@ -316,7 +323,7 @@ std::string Parser::read<std::string>() {
     return res;
 }
 
-bool Parser::read_skip_whitespace(char& c, bool& quoted) {
+inline bool Parser::read_skip_whitespace(char& c, bool& quoted) {
     while (true) {
         if (in.eof()) {
             if (quoted) {
@@ -346,7 +353,7 @@ bool Parser::read_skip_whitespace(char& c, bool& quoted) {
 }
 
 template<typename T>
-typename std::enable_if<std::is_integral<T>::value, T>::type Parser::read() {
+inline typename std::enable_if<std::is_integral<T>::value, T>::type Parser::read() {
     begin_read();
     T res = 0;
     bool quoted = false;
@@ -411,7 +418,7 @@ typename std::enable_if<std::is_integral<T>::value, T>::type Parser::read() {
 }
 
 template<typename T>
-typename std::enable_if<std::is_floating_point<T>::value, T>::type Parser::read() {
+inline typename std::enable_if<std::is_floating_point<T>::value, T>::type Parser::read() {
     begin_read();
     T a = 0;
     T b = 0.0;
@@ -578,7 +585,7 @@ read_exponent:
 }
 
 template<>
-ColumnType Parser::read<ColumnType>() {
+inline ColumnType Parser::read<ColumnType>() {
     begin_read();
     bool quoted = false;
     char c;
@@ -704,7 +711,7 @@ read_exponent:
     return res;
 }
 
-bool Parser::next_col() {
+inline bool Parser::next_col() {
     if (row_finished) {
         return false;
     }
@@ -718,7 +725,7 @@ bool Parser::next_col() {
 }
 
 template<typename T>
-Parser& operator>>(Parser& p, T& obj) {
+inline Parser& operator>>(Parser& p, T& obj) {
     obj = p.read<T>();
     return p;
 }
