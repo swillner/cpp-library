@@ -126,8 +126,8 @@ class Parser {
                 return *this;
             };
             Col operator*() const { return Col(p); };
-            const bool operator==(const iterator& rhs) const { return col == rhs.col; };
-            const bool operator!=(const iterator& rhs) const { return col != rhs.col; };
+            bool operator==(const iterator& rhs) const { return col == rhs.col; };
+            bool operator!=(const iterator& rhs) const { return col != rhs.col; };
         };
 
       public:
@@ -153,8 +153,8 @@ class Parser {
             return *this;
         };
         Row operator*() const { return Row(p); };
-        const bool operator==(const iterator& rhs) const { return row == rhs.row; };
-        const bool operator!=(const iterator& rhs) const { return row != rhs.row; };
+        bool operator==(const iterator& rhs) const { return row == rhs.row; };
+        bool operator!=(const iterator& rhs) const { return row != rhs.row; };
     };
 
   protected:
@@ -240,16 +240,26 @@ class Parser {
                 }
             };
         }
-        c = in.peek();
-        if (c == '\n' || c == '\r') {
-            in.get();
-        }
-        if (in.eof()) {
-            return false;
-        }
-        c = in.peek();
-        if (c == '#') {
-            return next_row();
+        while (true) {
+            c = in.peek();
+            if (in.eof()) {
+                return false;
+            }
+            if (c == '\n' || c == '\r') {
+                in.get();
+            } else if (c == '#') {
+                while (true) {
+                    c = in.get();
+                    if (in.eof()) {
+                        return false;
+                    }
+                    if (c == '\n' || c == '\r') {
+                        break;
+                    }
+                }
+            } else {
+                break;
+            }
         }
         col_has_been_read = false;
         row_finished = false;
