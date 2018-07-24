@@ -162,7 +162,7 @@ class ProgressBar {
 
         if (buf_remaining > 5 * buf.size() / 7) {
             // for wide terminals make actual bar shorter
-            if (buf.size() / 8 > prefix_len - 4) {
+            if (buf.size() / 8 > prefix_len + 4) {
                 const auto padding_before = buf.size() / 8 - prefix_len - 4;
                 std::memset(c, ' ', padding_before);
                 c += padding_before;
