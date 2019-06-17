@@ -229,10 +229,10 @@ class ProgressBar {
     }
 
   public:
-    static constexpr char ENDL = '\n';
-    static constexpr char GO_TO_BOL = '\r';
-    static constexpr char* CLEAR_TO_EOL = "\x1b[K";
-    static constexpr char* GO_UP = "\x1b[F";
+    static constexpr const char ENDL = '\n';
+    static constexpr const char GO_TO_BOL = '\r';
+    static constexpr const char* CLEAR_TO_EOL = "\x1b[K";
+    static constexpr const char* GO_UP = "\x1b[F";
 
     const std::size_t total;
     std::string description;
