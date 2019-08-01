@@ -18,6 +18,10 @@
 #ifndef CUDATOOLS_H
 #define CUDATOOLS_H
 
+#include <cooperative_groups.h>
+#include <cuda.h>
+#include <cuda_runtime_api.h>
+#include <device_functions.h>
 #include <algorithm>
 #include <cstring>
 #include <fstream>
@@ -44,7 +48,6 @@ class vector {
         } else {
             res = cudaMallocManaged(&data, size_p * sizeof(T));
         }
-        cudaDeviceSynchronize();
         if (res != cudaSuccess) {
             throw cudatools::exception(cudaGetErrorString(res));
         }
@@ -84,7 +87,6 @@ class vector {
     inline void reset() {
         if (size_m > 0) {
 #if defined(USE_CUDA) && defined(__CUDACC__)
-            cudaDeviceSynchronize();
             cudaFree(data);
 #else
             std::free(data);
@@ -93,10 +95,27 @@ class vector {
         }
     }
     inline std::size_t size() const { return size_m; }
+    inline void get(T* dest) {
+#if defined(USE_CUDA) && defined(__CUDACC__)
+        if (only_device) {
+            const auto res = cudaMemcpy(dest, data, size_m * sizeof(T), cudaMemcpyDeviceToHost);
+            if (res != cudaSuccess) {
+                throw cudatools::exception(cudaGetErrorString(res));
+            }
+        } else {
+#else
+        {
+#endif
+            std::memcpy(dest, data, size_m * sizeof(T));
+        }
+    }
     inline void set(const T* src) {
 #if defined(USE_CUDA) && defined(__CUDACC__)
         if (only_device) {
-            cudaMemcpy(data, src, size_m * sizeof(T), cudaMemcpyHostToDevice);
+            const auto res = cudaMemcpy(data, src, size_m * sizeof(T), cudaMemcpyHostToDevice);
+            if (res != cudaSuccess) {
+                throw cudatools::exception(cudaGetErrorString(res));
+            }
         } else {
 #else
         {
