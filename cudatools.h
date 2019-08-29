@@ -18,10 +18,12 @@
 #ifndef CUDATOOLS_H
 #define CUDATOOLS_H
 
+#if defined(USE_CUDA) && defined(__CUDACC__)
 #include <cooperative_groups.h>
 #include <cuda.h>
 #include <cuda_runtime_api.h>
 #include <device_functions.h>
+#endif
 #include <algorithm>
 #include <cstring>
 #include <fstream>
