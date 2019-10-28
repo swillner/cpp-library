@@ -176,7 +176,7 @@ inline void loop_foreach_aligned_view_gpu(Function&& func, Arg&& view, Args&&...
     constexpr auto block_size = 256;
     device_func<<<(view.total_size() + block_size - 1) / block_size, block_size>>>(func, view.total_size(), &view[0], &views[0]...);
 #else
-    nvector::detail::loop_foreach_aligned_view_parallel(func, std::forward<Arg>(view), std::forward<Args>(views)...);
+    nvector::detail::loop_foreach_aligned_view_parallel(std::forward<Function>(func), std::forward<Arg>(view), std::forward<Args>(views)...);
 #endif
 }
 
