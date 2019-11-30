@@ -5,6 +5,9 @@
 #ifndef MISC_H
 #define MISC_H
 
+#define likely(x) __builtin_expect((x), 1)
+#define unlikely(x) __builtin_expect((x), 0)
+
 template<typename Val>
 struct count_type {
     template<typename... Args>
