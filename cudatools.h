@@ -36,6 +36,22 @@ class exception : public std::runtime_error {
 };
 
 template<typename T, bool only_device = false>
+class vector;
+
+template<typename T>
+class device_pointer {
+    friend class vector<T, true>;
+    friend class vector<T, false>;
+
+  protected:
+    T* p;
+    device_pointer(T* p_) : p(p_) {}
+
+  public:
+    T* operator T*() { return p; }
+};
+
+template<typename T, bool only_device = false>
 class vector {
   protected:
     T* data = nullptr;
@@ -76,6 +92,7 @@ class vector {
         reset();
         allocate(size_p);
     }
+    inline T* pointer() { return device_pointer(data); }
     inline void resize(std::size_t size_p, const T& value) {
         resize(size_p);
         if (only_device) {
