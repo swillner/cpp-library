@@ -48,10 +48,10 @@ class device_pointer {
     device_pointer(T* p_) : p(p_) {}
 
   public:
-    T* operator T*() { return p; }
+    operator T*() { return p; }
 };
 
-template<typename T, bool only_device = false>
+template<typename T, bool only_device>
 class vector {
   protected:
     T* data = nullptr;
@@ -92,7 +92,7 @@ class vector {
         reset();
         allocate(size_p);
     }
-    inline T* pointer() { return device_pointer(data); }
+    inline T* pointer() { return device_pointer<T>(data); }
     inline void resize(std::size_t size_p, const T& value) {
         resize(size_p);
         if (only_device) {
