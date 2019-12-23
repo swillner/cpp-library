@@ -47,9 +47,12 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <algorithm>
+#include <fstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
+
+namespace netCDF {
 
 inline bool check_dimensions(const netCDF::NcVar& var, const std::vector<std::string>& names) {
     const auto& dims = var.getDims();
@@ -63,5 +66,42 @@ inline bool check_dimensions(const netCDF::NcVar& var, const std::vector<std::st
     }
     return true;
 }
+
+inline void check_file_exists(const std::string& filename) {
+    std::ifstream infile(filename);
+    if (!infile.good()) {
+        throw std::runtime_error(filename + " not found");
+    }
+}
+
+template<typename Function>
+inline void for_type(netCDF::NcType::ncType t, Function&& f) {
+    switch (t) {
+        case netCDF::NcType::nc_DOUBLE: {
+            double type = 0;
+            f(type);
+        } break;
+        case netCDF::NcType::nc_FLOAT: {
+            float type = 0;
+            f(type);
+        } break;
+        case netCDF::NcType::nc_USHORT: {
+            int16_t type = 0;
+            f(type);
+        } break;
+        case netCDF::NcType::nc_INT: {
+            int type = 0;
+            f(type);
+        } break;
+        case netCDF::NcType::nc_BYTE: {
+            signed char type = 0;
+            f(type);
+        } break;
+        default:
+            throw std::runtime_error("Variable type not supported");
+    }
+}
+
+};  // namespace netCDF
 
 #endif
