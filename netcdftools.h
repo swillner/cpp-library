@@ -102,6 +102,6 @@ inline void for_type(netCDF::NcType::ncType t, Function&& f) {
     }
 }
 
-};  // namespace netCDF
+}  // namespace netCDF
 
 #endif
