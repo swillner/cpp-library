@@ -47,7 +47,7 @@ class device_pointer {
 
   protected:
     T* p;
-    device_pointer(T* p_) : p(p_) {}
+    explicit device_pointer(T* p_) : p(p_) {}
 
   public:
     operator T*() { return p; }
@@ -82,7 +82,7 @@ class vector {
     using iterator = T*;
 
     vector() = default;
-    vector(std::size_t size_p) { allocate(size_p); }
+    explicit vector(std::size_t size_p) { allocate(size_p); }
     vector(const vector&) = delete;
     vector(vector&&) noexcept = default;
     ~vector() { reset(); }
