@@ -32,12 +32,15 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
-#include <ncDim.h>
-#include <ncFile.h>
-#include <ncGroupAtt.h>
-#include <ncType.h>
-#include <ncVar.h>
-#include <netcdf>
+// IWYU pragma: begin_exports
+#include "ncDim.h"
+#include "ncFile.h"
+#include "ncGroupAtt.h"
+#include "ncType.h"
+#include "ncVar.h"
+
+#include "netcdf"
+// IWYU pragma: end_exports
 
 #if defined(__CUDACC__)
 #pragma pop
