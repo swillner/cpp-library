@@ -33,12 +33,15 @@
 #endif
 
 // IWYU pragma: begin_exports
+#include "ncCompoundType.h"
 #include "ncDim.h"
+#include "ncException.h"
 #include "ncFile.h"
+#include "ncGroup.h"
 #include "ncGroupAtt.h"
 #include "ncType.h"
 #include "ncVar.h"
-
+#include "ncVarAtt.h"
 #include "netcdf"
 // IWYU pragma: end_exports
 
