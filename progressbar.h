@@ -19,6 +19,7 @@
 #define PROGRESSBAR_H
 
 #include <unistd.h>
+
 #include <atomic>
 #include <chrono>
 #include <cmath>

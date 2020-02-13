@@ -1,4 +1,5 @@
 #include "progressbar.h"
+
 #include <iostream>
 #include <thread>
 

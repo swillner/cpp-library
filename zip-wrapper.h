@@ -19,6 +19,7 @@
 #define ZIP_WRAPPER_H
 
 #include <zip.h>
+
 #include <exception>
 #include <iostream>
 #include <string>
@@ -27,7 +28,7 @@
 namespace libzip {
 class exception : public std::runtime_error {
   public:
-    explicit exception(const std::string& msg) : std::runtime_error(msg){};
+    explicit exception(const std::string& msg) : std::runtime_error(msg) {}
 };
 
 class streambuf : public std::streambuf {
@@ -68,7 +69,7 @@ class ifstream : public std::istream {
     zip_file* m;
 
   public:
-    explicit ifstream(zip_file* file) : m(file), std::istream(new streambuf(file)){};
+    explicit ifstream(zip_file* file) : m(file), std::istream(new streambuf(file)) {}
     ifstream(ifstream&& other) = default;
     virtual ~ifstream() {
         delete rdbuf();

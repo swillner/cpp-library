@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <cstring>
 #include <fstream>
+
 #include "nvector.h"
 
 namespace cudatools {

@@ -71,66 +71,34 @@ class Value {
   protected:
     T val;
     Vector dev;
-    Value(const T& v, const Vector& dev_p) : val(v), dev(dev_p){};
+    Value(const T& v, const Vector& dev_p) : val(v), dev(dev_p) {}
 
   public:
-    constexpr Value(std::size_t n, const T& v) : val(v), dev(0.0, n){};
-    constexpr Value(std::size_t i, std::size_t n, const T& v) : val(v), dev(0.0, n) {
-        dev[i] = 1;
-    }
-    explicit constexpr operator T() const {
-        return val;
-    }
-    constexpr const T value() const {
-        return val;
-    }
-    inline const Vector& derivative() const {
-        return dev;
-    }
+    constexpr Value(std::size_t n, const T& v) : val(v), dev(0.0, n) {}
+    constexpr Value(std::size_t i, std::size_t n, const T& v) : val(v), dev(0.0, n) { dev[i] = 1; }
+    explicit constexpr operator T() const { return val; }
+    constexpr const T value() const { return val; }
+    inline const Vector& derivative() const { return dev; }
 
-    constexpr Value operator-() {
-        return {-val, -dev};
-    }
+    constexpr Value operator-() { return {-val, -dev}; }
 
-    constexpr friend Value operator+(const Value& lhs, const Value& rhs) {
-        return {lhs.val + rhs.val, lhs.dev + rhs.dev};
-    }
-    constexpr friend Value operator+(const T& v, const Value& rhs) {
-        return {v + rhs.val, rhs.dev};
-    }
-    constexpr friend Value operator+(const Value& lhs, const T& v) {
-        return {lhs.val + v, lhs.dev};
-    }
+    constexpr friend Value operator+(const Value& lhs, const Value& rhs) { return {lhs.val + rhs.val, lhs.dev + rhs.dev}; }
+    constexpr friend Value operator+(const T& v, const Value& rhs) { return {v + rhs.val, rhs.dev}; }
+    constexpr friend Value operator+(const Value& lhs, const T& v) { return {lhs.val + v, lhs.dev}; }
 
-    constexpr friend Value operator-(const Value& lhs, const Value& rhs) {
-        return {lhs.val - rhs.val, lhs.dev - rhs.dev};
-    }
-    constexpr friend Value operator-(const T& v, const Value& rhs) {
-        return {v - rhs.val, -rhs.dev};
-    }
-    constexpr friend Value operator-(const Value& lhs, const T& v) {
-        return {lhs.val - v, lhs.dev};
-    }
+    constexpr friend Value operator-(const Value& lhs, const Value& rhs) { return {lhs.val - rhs.val, lhs.dev - rhs.dev}; }
+    constexpr friend Value operator-(const T& v, const Value& rhs) { return {v - rhs.val, -rhs.dev}; }
+    constexpr friend Value operator-(const Value& lhs, const T& v) { return {lhs.val - v, lhs.dev}; }
 
-    constexpr friend Value operator*(const Value& lhs, const Value& rhs) {
-        return {lhs.val * rhs.val, lhs.dev * rhs.val + lhs.val * rhs.dev};
-    }
-    constexpr friend Value operator*(const T& v, const Value& rhs) {
-        return {v * rhs.val, v * rhs.dev};
-    }
-    constexpr friend Value operator*(const Value& lhs, const T& val) {
-        return {lhs.val * val, lhs.dev * val};
-    }
+    constexpr friend Value operator*(const Value& lhs, const Value& rhs) { return {lhs.val * rhs.val, lhs.dev * rhs.val + lhs.val * rhs.dev}; }
+    constexpr friend Value operator*(const T& v, const Value& rhs) { return {v * rhs.val, v * rhs.dev}; }
+    constexpr friend Value operator*(const Value& lhs, const T& val) { return {lhs.val * val, lhs.dev * val}; }
 
     constexpr friend Value operator/(const Value& lhs, const Value& rhs) {
         return {lhs.val / rhs.val, lhs.dev / rhs.val - rhs.dev * (lhs.val / rhs.val / rhs.val)};
     }
-    constexpr friend Value operator/(const T& v, const Value& rhs) {
-        return {v / rhs.val, rhs.dev * (-v / rhs.val / rhs.val)};
-    }
-    constexpr friend Value operator/(const Value& lhs, const T& v) {
-        return {lhs.val / v, lhs.dev / v};
-    }
+    constexpr friend Value operator/(const T& v, const Value& rhs) { return {v / rhs.val, rhs.dev * (-v / rhs.val / rhs.val)}; }
+    constexpr friend Value operator/(const Value& lhs, const T& v) { return {lhs.val / v, lhs.dev / v}; }
 
     constexpr Value& operator+=(const Value& v) {
         val += v.val;
@@ -174,65 +142,29 @@ class Value {
         return *this;
     }
 
-    constexpr friend bool operator<(const Value& lhs, const Value& rhs) {
-        return lhs.val < rhs.val;
-    }
-    constexpr friend bool operator<(const T& v, const Value& rhs) {
-        return v < rhs.val;
-    }
-    constexpr friend bool operator<(const Value& lhs, const T& v) {
-        return lhs.val < v;
-    }
+    constexpr friend bool operator<(const Value& lhs, const Value& rhs) { return lhs.val < rhs.val; }
+    constexpr friend bool operator<(const T& v, const Value& rhs) { return v < rhs.val; }
+    constexpr friend bool operator<(const Value& lhs, const T& v) { return lhs.val < v; }
 
-    constexpr friend bool operator<=(const Value& lhs, const Value& rhs) {
-        return lhs.val <= rhs.val;
-    }
-    constexpr friend bool operator<=(const T& v, const Value& rhs) {
-        return v <= rhs.val;
-    }
-    constexpr friend bool operator<=(const Value& lhs, const T& v) {
-        return lhs.val <= v;
-    }
+    constexpr friend bool operator<=(const Value& lhs, const Value& rhs) { return lhs.val <= rhs.val; }
+    constexpr friend bool operator<=(const T& v, const Value& rhs) { return v <= rhs.val; }
+    constexpr friend bool operator<=(const Value& lhs, const T& v) { return lhs.val <= v; }
 
-    constexpr friend bool operator>(const Value& lhs, const Value& rhs) {
-        return lhs.val > rhs.val;
-    }
-    constexpr friend bool operator>(const T& v, const Value& rhs) {
-        return v > rhs.val;
-    }
-    constexpr friend bool operator>(const Value& lhs, const T& v) {
-        return lhs.val > v;
-    }
+    constexpr friend bool operator>(const Value& lhs, const Value& rhs) { return lhs.val > rhs.val; }
+    constexpr friend bool operator>(const T& v, const Value& rhs) { return v > rhs.val; }
+    constexpr friend bool operator>(const Value& lhs, const T& v) { return lhs.val > v; }
 
-    constexpr friend bool operator>=(const Value& lhs, const Value& rhs) {
-        return lhs.val >= rhs.val;
-    }
-    constexpr friend bool operator>=(const T& v, const Value& rhs) {
-        return v >= rhs.val;
-    }
-    constexpr friend bool operator>=(const Value& lhs, const T& v) {
-        return lhs.val >= v;
-    }
+    constexpr friend bool operator>=(const Value& lhs, const Value& rhs) { return lhs.val >= rhs.val; }
+    constexpr friend bool operator>=(const T& v, const Value& rhs) { return v >= rhs.val; }
+    constexpr friend bool operator>=(const Value& lhs, const T& v) { return lhs.val >= v; }
 
-    constexpr friend bool operator==(const Value& lhs, const Value& rhs) {
-        return lhs.val == rhs.val;
-    }
-    constexpr friend bool operator==(const T& v, const Value& rhs) {
-        return v == rhs.val;
-    }
-    constexpr friend bool operator==(const Value& lhs, const T& v) {
-        return lhs.val == v;
-    }
+    constexpr friend bool operator==(const Value& lhs, const Value& rhs) { return lhs.val == rhs.val; }
+    constexpr friend bool operator==(const T& v, const Value& rhs) { return v == rhs.val; }
+    constexpr friend bool operator==(const Value& lhs, const T& v) { return lhs.val == v; }
 
-    constexpr friend bool operator!=(const Value& lhs, const Value& rhs) {
-        return lhs.val != rhs.val;
-    }
-    constexpr friend bool operator!=(const T& v, const Value& rhs) {
-        return v != rhs.val;
-    }
-    constexpr friend bool operator!=(const Value& lhs, const T& v) {
-        return lhs.val != v;
-    }
+    constexpr friend bool operator!=(const Value& lhs, const Value& rhs) { return lhs.val != rhs.val; }
+    constexpr friend bool operator!=(const T& v, const Value& rhs) { return v != rhs.val; }
+    constexpr friend bool operator!=(const Value& lhs, const T& v) { return lhs.val != v; }
 
     constexpr friend Value std::pow<T, Vector>(const Value& lhs, const Value& rhs);
     constexpr friend Value std::pow<T, Vector>(const T& v, const Value& rhs);
@@ -259,20 +191,14 @@ class Variable {
 
   public:
     constexpr Variable(std::size_t offset, std::size_t num, std::size_t length, const T& initial_value)
-        : variables_num(num), variables_offset(offset), val(length, initial_value){};
+        : variables_num(num), variables_offset(offset), val(length, initial_value) {}
     constexpr const Variable& operator=(const std::vector<T>& v) {
         val.assign(v);
         return *this;
     }
-    constexpr std::size_t size() const {
-        return val.size();
-    }
-    constexpr std::vector<T>& value() {
-        return val;
-    }
-    constexpr const std::vector<T>& value() const {
-        return val;
-    }
+    constexpr std::size_t size() const { return val.size(); }
+    constexpr std::vector<T>& value() { return val; }
+    constexpr const std::vector<T>& value() const { return val; }
     constexpr Value<T, Vector> operator[](std::size_t i) const {
         if (variables_offset < variables_num) {
             return {i + variables_offset, variables_num, val[i]};
