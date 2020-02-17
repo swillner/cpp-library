@@ -71,34 +71,34 @@ class Value {
   protected:
     T val;
     Vector dev;
-    Value(const T& v, const Vector& dev_p) : val(v), dev(dev_p) {}
+    constexpr Value(const T& v, const Vector& dev_p) : val(v), dev(dev_p) {}
 
   public:
     constexpr Value(std::size_t n, const T& v) : val(v), dev(0.0, n) {}
     constexpr Value(std::size_t i, std::size_t n, const T& v) : val(v), dev(0.0, n) { dev[i] = 1; }
     explicit constexpr operator T() const { return val; }
     constexpr const T value() const { return val; }
-    inline const Vector& derivative() const { return dev; }
+    constexpr const Vector& derivative() const { return dev; }
 
     constexpr Value operator-() { return {-val, -dev}; }
 
-    constexpr friend Value operator+(const Value& lhs, const Value& rhs) { return {lhs.val + rhs.val, lhs.dev + rhs.dev}; }
-    constexpr friend Value operator+(const T& v, const Value& rhs) { return {v + rhs.val, rhs.dev}; }
-    constexpr friend Value operator+(const Value& lhs, const T& v) { return {lhs.val + v, lhs.dev}; }
+    inline friend Value operator+(const Value& lhs, const Value& rhs) { return {lhs.val + rhs.val, lhs.dev + rhs.dev}; }
+    inline friend Value operator+(const T& v, const Value& rhs) { return {v + rhs.val, rhs.dev}; }
+    inline friend Value operator+(const Value& lhs, const T& v) { return {lhs.val + v, lhs.dev}; }
 
-    constexpr friend Value operator-(const Value& lhs, const Value& rhs) { return {lhs.val - rhs.val, lhs.dev - rhs.dev}; }
-    constexpr friend Value operator-(const T& v, const Value& rhs) { return {v - rhs.val, -rhs.dev}; }
-    constexpr friend Value operator-(const Value& lhs, const T& v) { return {lhs.val - v, lhs.dev}; }
+    inline friend Value operator-(const Value& lhs, const Value& rhs) { return {lhs.val - rhs.val, lhs.dev - rhs.dev}; }
+    inline friend Value operator-(const T& v, const Value& rhs) { return {v - rhs.val, -rhs.dev}; }
+    inline friend Value operator-(const Value& lhs, const T& v) { return {lhs.val - v, lhs.dev}; }
 
-    constexpr friend Value operator*(const Value& lhs, const Value& rhs) { return {lhs.val * rhs.val, lhs.dev * rhs.val + lhs.val * rhs.dev}; }
-    constexpr friend Value operator*(const T& v, const Value& rhs) { return {v * rhs.val, v * rhs.dev}; }
-    constexpr friend Value operator*(const Value& lhs, const T& val) { return {lhs.val * val, lhs.dev * val}; }
+    inline friend Value operator*(const Value& lhs, const Value& rhs) { return {lhs.val * rhs.val, lhs.dev * rhs.val + lhs.val * rhs.dev}; }
+    inline friend Value operator*(const T& v, const Value& rhs) { return {v * rhs.val, v * rhs.dev}; }
+    inline friend Value operator*(const Value& lhs, const T& val) { return {lhs.val * val, lhs.dev * val}; }
 
-    constexpr friend Value operator/(const Value& lhs, const Value& rhs) {
+    inline friend Value operator/(const Value& lhs, const Value& rhs) {
         return {lhs.val / rhs.val, lhs.dev / rhs.val - rhs.dev * (lhs.val / rhs.val / rhs.val)};
     }
-    constexpr friend Value operator/(const T& v, const Value& rhs) { return {v / rhs.val, rhs.dev * (-v / rhs.val / rhs.val)}; }
-    constexpr friend Value operator/(const Value& lhs, const T& v) { return {lhs.val / v, lhs.dev / v}; }
+    inline friend Value operator/(const T& v, const Value& rhs) { return {v / rhs.val, rhs.dev * (-v / rhs.val / rhs.val)}; }
+    inline friend Value operator/(const Value& lhs, const T& v) { return {lhs.val / v, lhs.dev / v}; }
 
     constexpr Value& operator+=(const Value& v) {
         val += v.val;
