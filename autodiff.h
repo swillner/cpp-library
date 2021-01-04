@@ -194,7 +194,11 @@ class Variable final {
         : variables_num(num), variables_offset(offset), val(length, std::move(initial_value)) {}
 
     Variable& operator=(const std::vector<T>& v) {
-        val.assign(v);
+        val = v;
+        return *this;
+    }
+    Variable& operator=(std::vector<T>&& v) {
+        val = std::forward(v);
         return *this;
     }
 
