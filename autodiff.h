@@ -186,12 +186,13 @@ template<typename T, typename Vector>
 class Variable final {
   private:
     std::vector<T> val;
-    const std::size_t variables_num;
-    const std::size_t variables_offset;
+    std::size_t variables_num;
+    std::size_t variables_offset;
 
   public:
     Variable(std::size_t offset, std::size_t num, std::size_t length, T initial_value)
         : variables_num(num), variables_offset(offset), val(length, std::move(initial_value)) {}
+    Variable(std::size_t num, T initial_value) : Variable(0, num, num, std::move(initial_value)) {}
 
     Variable& operator=(const std::vector<T>& v) {
         val = v;
