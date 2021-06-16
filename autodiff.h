@@ -82,6 +82,11 @@ class Value final {
     const Vector& derivative() const { return dev; }
     explicit operator T() const { return val; }
 
+    void reset() {
+        val = 0;
+        std::fill(std::begin(dev), std::end(dev), 0);
+    }
+
     Value operator-() const { return {-val, -dev}; }
 
     friend Value operator+(const Value& lhs, const Value& rhs) { return {lhs.val + rhs.val, lhs.dev + rhs.dev}; }
