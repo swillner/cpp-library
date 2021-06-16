@@ -82,10 +82,9 @@ class Value final {
     const Vector& derivative() const { return dev; }
     explicit operator T() const { return val; }
 
-    Value reset() {
-        val = val * 0;  // most general, since scalar values are also possible
+    void reset() {
+        val = 0;
         std::fill(std::begin(dev), std::end(dev), 0);
-        return *this;
     }
 
     Value operator-() const { return {-val, -dev}; }
